@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <repositories version="1.0">
     <repo priority="50" quality="experimental" status="unofficial">
-        <name>armills</name>
-        <description>My personal gentoo overlay</description>
-        <homepage>http://github.com/armills/overlay/</homepage>
+        <name>tannewt-agocontrol</name>
+        <description>tannewt's agocontrol Gentoo overlay</description>
+        <homepage>http://github.com/tannewt/overlay/</homepage>
         <owner>
-            <email>adam@armills.info</email>
+            <email>scott.shawcroft@gmail.com</email>
         </owner>
-        <source type="git">git://github.com/armills/overlay.git</source>
+        <source type="git">git://github.com/tannewt/overlay.git</source>
     </repo>
 </repositories>
