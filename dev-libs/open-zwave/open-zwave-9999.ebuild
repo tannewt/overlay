@@ -2,7 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit subversion
+EAPI=5
+
+inherit subversion eutils
 
 DESCRIPTION="An open-source interface to Z-Wave networks."
 HOMEPAGE="http://open-zwave.googlecode.com"
@@ -18,8 +20,12 @@ SLOT="0"
 DEPEND="dev-libs/libxml2"
 RDEPEND="${RDEPEND}"
 
+src_prepare() {
+	epatch "${FILESDIR}/${PN}-missing_revision_fix.patch"
+}
+
 src_compile() {
-	emake -C cpp/build/linux || die
+	emake -C cpp/build || die
 }
 
 src_install() {
@@ -35,8 +41,8 @@ src_install() {
 	insinto /usr/share/openzwave
 	doins -r config
 	exeinto /usr/lib
-	dolib.so cpp/lib/linux/libopenzwave.so
-	dolib.a cpp/lib/linux/libopenzwave.a
+	dolib.so cpp/build/libopenzwave.so
+	dolib.a cpp/build/libopenzwave.a
 
 	insinto /usr/include/openzwave
 	doins cpp/src/*.h

@@ -11,6 +11,7 @@ DESCRIPTION="Ago control home automation suite"
 HOMEPAGE="http://www.agocontrol.com/"
 
 EGIT_REPO_URI="http://git.agocontrol.com/agocontrol/agocontrol.git"
+EGIT_BRANCH="develop"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
@@ -45,7 +46,11 @@ pkg_setup() {
 	python_pkg_setup
 
 	enewgroup agocontrol
-	enewuser agocontrol -1 -1 "/var/run/agocontrol" "agocontrol,uucp,dialout"
+	groups="agocontrol,uucp"
+	if use asterisk; then
+		groups="${groups},dialout"
+	fi
+	enewuser agocontrol -1 -1 "/var/run/agocontrol" $groups
 
 	if use blinkm || use i2c ; then
 		ewarn "The blinkm and i2c devices require the i2c-dev.h header"
@@ -60,17 +65,23 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-use-openzwave-share.patch"
+	epatch "${FILESDIR}/${P}-install-inventory-upgrade.patch"
+	epatch "${FILESDIR}/${P}-install-python-lib.patch"
+	epatch "${FILESDIR}/${P}-link_pthread.patch"
+	epatch "${FILESDIR}/${P}-link_boost.patch"
+	epatch "${FILESDIR}/${P}-fix_room_creation.patch"
 
 	python_convert_shebangs -r 2 .
 }
 
 src_configure() {
 	local mycmakeargs=(
-		-DBINDIR=/usr/lib/${PN}
+		-DBINDIR=/usr/bin
         -DCONFDIR=/etc/${PN}
         -DDATADIR=/usr/share/${PN}
-        -DLOCALSTATEDIR=/var/${PN}
+        -DLOCALSTATEDIR=/var/lib/${PN}
         -DHTMLDIR=/usr/share/${PN}/html
+		-DSITE_PACKAGE="$(python_get_sitedir)"
 
 		$(cmake-utils_use_build jsonrpc CORE_rpc)
 		$(cmake-utils_use_build lua CORE_lua)
@@ -154,8 +165,9 @@ src_install() {
 	# use jsonrpc && doins -r core/rpc/html
 	# use jsonrpc && fperms +x -R /usr/share/agocontrol/html/cgi-bin/
 
-	dodir /var/agocontrol
-	fowners -R agocontrol:agocontrol /var/agocontrol
+	dodir /var/lib/agocontrol
+	dodir /var/lib/agocontrol/db
+	fowners -R agocontrol:agocontrol /var/lib/agocontrol
 }
 
 pkg_postinst() {
@@ -171,20 +183,20 @@ pkg_config() {
 		sed -i "s/00000000-0000-0000-000000000000/${UUID}/" /etc/agocontrol/conf.d/system.conf
 	)
 
-	test -e "${ROOT}"/etc/agocontrol/db/inventory.db || (
-		sqlite3 -init "${ROOT}"/usr/share/${PN}/data/inventory.sql \
-			"${ROOT}"/etc/agocontrol/db/inventory.db .quit && \
-		sqlite3 -init "${ROOT}"/usr/share/${PN}/data/inventory-upgrade.sql \
-			"${ROOT}"/etc/agocontrol/db/inventory.db .quit && \
-		chown agocontrol:agocontrol "${ROOT}"/etc/agocontrol/db/inventory.db && \
-		einfo "Installed /etc/agocontrol/db/inventory.db"
+	test -e "${ROOT}"/var/lib/agocontrol/db/inventory.db || (
+		sqlite3 -init "${ROOT}"/usr/share/${PN}/inventory.sql \
+			"${ROOT}"/var/lib/agocontrol/db/inventory.db .quit && \
+		sqlite3 -init "${ROOT}"/usr/share/${PN}/inventory-upgrade.sql \
+			"${ROOT}"/var/lib/agocontrol/db/inventory.db .quit && \
+		chown agocontrol:agocontrol "${ROOT}"/var/lib/agocontrol/db/inventory.db && \
+		einfo "Installed /var/lib/agocontrol/db/inventory.db"
 	)
 
-	test -e "${ROOT}"/var/agocontrol/datalogger.db || (
-		sqlite3 -init "${ROOT}"/usr/share/${PN}/data/datalogger.sql \
-			"${ROOT}"/var/agocontrol/datalogger.db .quit && \
-		chown agocontrol:agocontrol "${ROOT}"/var/agocontrol/datalogger.db && \
-		einfo "Installed /var/agocontrol/datalogger.db"
+	test -e "${ROOT}"/var/lib/agocontrol/datalogger.db || (
+		sqlite3 -init "${ROOT}"/usr/share/${PN}/datalogger.sql \
+			"${ROOT}"/var/lib/agocontrol/datalogger.db .quit && \
+		chown agocontrol:agocontrol "${ROOT}"/var/lib/agocontrol/datalogger.db && \
+		einfo "Installed /var/lib/agocontrol/datalogger.db"
 	)
 
 	sasldblistusers2 -f "${ROOT}"/var/lib/qpidd/qpidd.sasldb | \

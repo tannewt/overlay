@@ -1,0 +1,12 @@
+diff --git a/devices/MySensors/CMakeLists.txt b/devices/MySensors/CMakeLists.txt
+index 4fcf81f..102538b 100644
+--- a/devices/MySensors/CMakeLists.txt
++++ b/devices/MySensors/CMakeLists.txt
+@@ -4,6 +4,7 @@ file (GLOB_RECURSE DEVICE_SOURCE_FILES *.cpp)
+ 
+ set (DEVICE_EXTRA_LIBRARIES
+     agoclient
++    pthread
+ )
+ 
+ set (DEVICE "agoMySensors")

@@ -1,0 +1,12 @@
+diff -rupN -x '*.svn*' /usr/portage/distfiles/svn-src/open-zwave/trunk/cpp/build/support.mk ./cpp/build/support.mk
+--- /usr/portage/distfiles/svn-src/open-zwave/trunk/cpp/build/support.mk	2014-05-03 00:47:10.051912926 -0700
++++ ./cpp/build/support.mk	2014-05-03 23:31:23.364743761 -0700
+@@ -32,7 +32,7 @@ else
+ VERSION_REV ?= $(shell $(SVNVERSION) $(top_srcdir)|awk -F'[^0-9]*' '$$0=$$1')
+ endif
+ ifeq ($(VERSION_REV),)
+-VERSION_REV ?= 0
++VERSION_REV = 0
+ endif
+ # version number to use on the shared library
+ VERSION := $(VERSION_MAJ).$(VERSION_MIN)

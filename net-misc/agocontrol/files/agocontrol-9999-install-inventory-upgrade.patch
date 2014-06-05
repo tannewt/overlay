@@ -1,0 +1,25 @@
+From 4b3a8fd31eb96c52ce522c78f15a4c7a235f578c Mon Sep 17 00:00:00 2001
+From: Scott Shawcroft <scott.shawcroft@gmail.com>
+Date: Sun, 11 May 2014 22:55:02 -0700
+Subject: [PATCH] Also install db upgrade.
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 899e644..dec6e20 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -83,7 +83,7 @@ OPTION(BUILD_CORE "Build the CORE" ON)
+ if (BUILD_CORE)
+   add_subdirectory (core) 
+   install (PROGRAMS gateways/agomeloware.py DESTINATION ${BINDIR})
+-  install (FILES data/inventory.sql data/datalogger.sql DESTINATION ${DATADIR})
++  install (FILES data/inventory.sql data/inventory-upgrade.sql data/datalogger.sql DESTINATION ${DATADIR})
+ endif()
+ 
+ OPTION(BUILD_DEVICES "Build the devices" ON)
+-- 
+1.9.2
+
