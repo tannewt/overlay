@@ -12,13 +12,15 @@ checkconfd() {
 
     QPIDD_USER="${QPIDD_USER:-qpidd}"
     QPIDD_GROUP="${QPIDD_GROUP:-qpidd}"
-	PIDDIR="${PIDDIR:-/var/run/qpidd}"
+    PIDDIR="${PIDDIR:-/run/qpidd}"
+    mkdir -p $PIDDIR
+    chown $QPIDD_USER:$QPIDD_GROUP $PIDDIR
 
-	CONFIGFILE="${CONFIGFILE:-/etc/qpid/qpidd.conf}"
-	if [ ! -r "${CONFIGFILE}" ]; then
-		eerror "Unable to read configuration file: ${CONFIGFILE}"
-		return 1
-	fi
+    CONFIGFILE="${CONFIGFILE:-/etc/qpid/qpidd.conf}"
+    if [ ! -r "${CONFIGFILE}" ]; then
+	eerror "Unable to read configuration file: ${CONFIGFILE}"
+	return 1
+    fi
 
     DATADIR="${DATADIR:-/var/lib/qpidd}"
     if [ -n "${DATADIR}" ]; then

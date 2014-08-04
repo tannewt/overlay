@@ -12,6 +12,7 @@ HOMEPAGE="http://www.agocontrol.com/"
 
 EGIT_REPO_URI="http://git.agocontrol.com/agocontrol/agocontrol.git"
 EGIT_BRANCH="develop"
+EGIT_COMMIT="b226b10169f0078495389619f87186e800ae7581"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
@@ -29,8 +30,10 @@ DEPEND="<dev-cpp/yaml-cpp-0.5.0
 		dev-python/pyyaml
 		dev-python/qpid-python
 		dev-python/sqlite3dbm
+		net-analyzer/arp-scan
 		net-misc/curl
 		net-misc/qpid-cpp[sasl]
+		sys-apps/nawk
 		apc? ( >=dev-python/pysnmp-4.0 )
 		asterisk? ( dev-python/twisted-core dev-python/starpy )
 		blinkm? ( sys-apps/i2c-tools )
@@ -67,9 +70,10 @@ src_prepare() {
 	epatch "${FILESDIR}/${P}-use-openzwave-share.patch"
 	epatch "${FILESDIR}/${P}-install-inventory-upgrade.patch"
 	epatch "${FILESDIR}/${P}-install-python-lib.patch"
-	epatch "${FILESDIR}/${P}-link_pthread.patch"
-	epatch "${FILESDIR}/${P}-link_boost.patch"
 	epatch "${FILESDIR}/${P}-fix_room_creation.patch"
+	epatch "${FILESDIR}/${P}-fix_mysensors.patch"
+	epatch "${FILESDIR}/${P}-move_uuidmap_to_var.patch"
+	epatch "${FILESDIR}/${P}-fix_graph.patch"
 
 	python_convert_shebangs -r 2 .
 }

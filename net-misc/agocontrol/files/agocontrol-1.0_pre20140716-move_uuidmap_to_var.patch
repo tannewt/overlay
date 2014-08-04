@@ -1,0 +1,46 @@
+diff --git a/shared/CMakeLists.txt b/shared/CMakeLists.txt
+index c629395..6388de9 100644
+--- a/shared/CMakeLists.txt
++++ b/shared/CMakeLists.txt
+@@ -32,5 +32,5 @@ target_link_libraries (agoclient ${AGOCLIENT_LIBRARIES})
+ install (TARGETS agoclient LIBRARY DESTINATION ${LIBDIR})
+ install (FILES ${CMAKE_CURRENT_BINARY_DIR}/agoclient.h CDataFile.h DESTINATION ${INCDIR})
+ install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/agoclient.py DESTINATION ${SITE_PACKAGE})
+-install (DIRECTORY DESTINATION ${CONFDIR}/uuidmap)
++install (DIRECTORY DESTINATION ${LOCALSTATEDIR}/uuidmap)
+ 
+diff --git a/shared/agoclient.cpp b/shared/agoclient.cpp
+index ed62652..0ac63b8 100644
+--- a/shared/agoclient.cpp
++++ b/shared/agoclient.cpp
+@@ -356,7 +356,7 @@ agocontrol::AgoConnection::AgoConnection(const char *interfacename) {
+ 	eventHandler = NULL;
+ 	instance = interfacename;
+ 
+-	uuidMapFile = CONFDIR "/uuidmap/";
++	uuidMapFile = LOCALSTATEDIR "/uuidmap/";
+ 	uuidMapFile += interfacename;
+ 	uuidMapFile += ".json";
+ 	loadUuidMap();
+diff --git a/shared/agoclient.py.in b/shared/agoclient.py.in
+index 7bf2ecb..da2393c 100644
+--- a/shared/agoclient.py.in
++++ b/shared/agoclient.py.in
+@@ -131,7 +131,7 @@ class AgoConnection:
+         """Store the mapping (dict) of UUIDs to
+         internal ids into a JSON file."""
+         try:
+-            with open(CONFDIR + '/uuidmap/' + self.instance +
++            with open(LOCALSTATEDIR + '/uuidmap/' + self.instance +
+                 '.json', 'w') as outfile:
+                 simplejson.dump(self.uuids, outfile)
+         except (OSError, IOError) as exception:
+@@ -145,7 +145,7 @@ class AgoConnection:
+         """Read the mapping (dict) of UUIDs to
+         internal ids from a JSON file."""
+         try:
+-            with open(CONFDIR + '/uuidmap/' + self.instance +
++            with open(LOCALSTATEDIR + '/uuidmap/' + self.instance +
+                 '.json', 'r') as infile:
+                 self.uuids = simplejson.load(infile)
+         except (OSError, IOError) as exception:

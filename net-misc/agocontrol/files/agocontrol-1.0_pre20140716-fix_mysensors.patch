@@ -1,0 +1,22 @@
+diff --git a/devices/MySensors/agoMySensors.cpp b/devices/MySensors/agoMySensors.cpp
+index ae3211c..5af53be 100644
+--- a/devices/MySensors/agoMySensors.cpp
++++ b/devices/MySensors/agoMySensors.cpp
+@@ -9,7 +9,7 @@
+ #include "agoclient.h"
+ 
+ #ifndef DEVICEMAPFILE
+-#define DEVICEMAPFILE CONFDIR "/maps/mysensors.json"
++#define DEVICEMAPFILE LOCALSTATEDIR "/maps/mysensors.json"
+ #endif
+ #define RESEND_MAX_ATTEMPTS 30
+ 
+@@ -882,7 +882,7 @@ int main(int argc, char **argv) {
+     } while(continu);
+ 
+     // determine reply for INTERNAL;I_UNIT message - defaults to "M"etric
+-    if (getConfigOption("system","units","SI")!="SI") units="I";
++    units = getConfigOption("system","units","M");
+ 
+     //open serial port
+     if( !openSerialPort(device) ) {

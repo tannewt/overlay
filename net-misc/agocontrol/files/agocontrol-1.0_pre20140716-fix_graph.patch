@@ -1,0 +1,62 @@
+diff --git a/core/rpc/html/js/app.js b/core/rpc/html/js/app.js
+index fd1d0bc..921ac04 100644
+--- a/core/rpc/html/js/app.js
++++ b/core/rpc/html/js/app.js
+@@ -1121,26 +1121,13 @@ function renderGraph(device, environment) {
+         return;
+     }
+ 
+-	/* Split the values into buckets */
+-	var num_buckets = Math.max(1, Math.floor(values.length / max_ticks));
+-	var buckets = values.chunk(num_buckets);
+-	var labels = [];
+-	var i = 0;
+-
+ 	/*
+ 	 * Compute averange for each bucket and pick a representative time to
+ 	 * display
+ 	 */
+-	for ( var j = 0; j < buckets.length; j++) {
+-	    var bucket = buckets[j];
+-	    var ts = bucket[0].time + (bucket[bucket.length - 1].time - bucket[0].time) / 2;
+-	    labels.push(new Date(Math.floor(ts) * 1000));
+-	    var value = 0;
+-	    for ( var k = 0; k < bucket.length; k++) {
+-		value += bucket[k].level;
+-	    }
+-	    data.push([ i, value / k ]);
+-	    i++;
++	for ( var j = 0; j < values.length; j++) {
++	    var d = new Date(Math.floor(values[j].time * 1000));
++	    data.push([ d, values[j].level ]);
+ 	}
+ 
+ 	/* Render the graph */
+@@ -1149,7 +1136,6 @@ function renderGraph(device, environment) {
+ 	Flotr.draw(container, [ data ], {
+ 	    HtmlText : false,
+ 	    title : environment,
+-	    mode : "time",
+ 	    yaxis : {
+ 		tickFormatter : function(x) {
+ 		    return x + " " + unit;
+@@ -1160,16 +1146,13 @@ function renderGraph(device, environment) {
+ 		relative : true,
+ 
+ 		trackFormatter : function(o) {
+-		    return formatDate(labels[Math.round(o.x)]) + " - " + o.y + " " + unit;
++		    return formatDate(o.x) + " - " + o.y + " " + unit;
+ 		}
+ 	    },
+ 	    xaxis : {
+-		noTicks : i,
++	        mode : "time",
+ 		labelsAngle : 90,
+-		tickDecimals : 0,
+-		tickFormatter : function(x) {
+-		    return formatDate(labels[x]);
+-		}
++		timeMode: "local"
+ 	    }
+ 	});
+ 

@@ -1,11 +1,11 @@
 diff --git a/core/resolver/agoresolver.cpp b/core/resolver/agoresolver.cpp
-index 833ec0f..27fa12a 100644
+index 652525b..58a8a89 100644
 --- a/core/resolver/agoresolver.cpp
 +++ b/core/resolver/agoresolver.cpp
-@@ -428,7 +428,7 @@ int main(int argc, char **argv) {
+@@ -464,7 +464,7 @@ int main(int argc, char **argv) {
  	}
  
- //	clog << agocontrol::kLogDebug << "reading inventory" << std::endl;
+ 	clog << agocontrol::kLogDebug << "reading inventory" << std::endl;
 -	inv = new Inventory(CONFDIR "/db/inventory.db");
 +	inv = new Inventory(LOCALSTATEDIR "/db/inventory.db");
  
